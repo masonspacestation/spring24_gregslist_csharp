@@ -63,4 +63,36 @@ public class CarsController : ControllerBase
       return BadRequest(exception.Message);
     }
   }
+
+  [Authorize]
+  [HttpPut("{carId}")]
+  public async Task<ActionResult<Car>> UpdateCar(int carId, [FromBody] Car carData)
+  {
+    try
+    {
+      Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+      Car car = _carsService.UpdateCar(carId, userInfo.Id, carData);
+      return Ok(car);
+    }
+    catch (Exception exception)
+    {
+      return BadRequest(exception.Message);
+    }
+  }
+
+  [Authorize]
+  [HttpDelete("{carId}")]
+  public async Task<ActionResult<string>> DestroyCar(int carId)
+  {
+    try
+    {
+      Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+      string message = _carsService.DestroyCar(carId, userInfo.Id);
+      return Ok(message);
+    }
+    catch (Exception exception)
+    {
+      return BadRequest(exception.Message);
+    }
+  }
 }

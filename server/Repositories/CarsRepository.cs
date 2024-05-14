@@ -1,6 +1,8 @@
 
 
 
+
+
 namespace csharp_gregslist_api.Repositories;
 
 public class CarsRepository
@@ -50,6 +52,13 @@ public class CarsRepository
     return car;
   }
 
+  internal void DestroyCar(int carId)
+  {
+    string sql = "DELETE FROM cars WHERE id = @carId;";
+
+    _db.Execute(sql, new { carId });
+  }
+
   internal Car GetCarById(int carId)
   {
     string sql = @"
@@ -85,5 +94,32 @@ public class CarsRepository
     }).ToList();
 
     return cars;
+  }
+
+  internal Car UpdateCar(Car carToUpdate)
+  {
+    string sql = @"
+    UPDATE cars
+    SET
+    make = @Make,
+    model = @Model,
+    price = @Price,
+    hasCleanTitle = @HasCleanTitle
+    WHERE id = @Id;
+    
+    SELECT
+    cars.*,
+    accounts.*
+    FROM cars
+    JOIN accounts ON accounts.id = cars.creatorId
+    WHERE cars.id = @Id;";
+
+    Car car = _db.Query<Car, Account, Car>(sql, (car, account) =>
+    {
+      car.Creator = account;
+      return car;
+    }, carToUpdate).FirstOrDefault();
+
+    return car;
   }
 }
