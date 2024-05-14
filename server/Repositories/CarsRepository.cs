@@ -51,9 +51,17 @@ public class CarsRepository
 
   internal List<Car> GetCars()
   {
-    string sql = "SELECT * FROM cars;";
+    string sql = @"
+    SELECT 
+    * 
+    FROM cars
+    JOIN accounts ON accounts.id = cars.creatorId;";
 
-    List<Car> cars = _db.Query<Car>(sql).ToList();
+    List<Car> cars = _db.Query<Car, Account, Car>(sql, (car, account) =>
+    {
+      car.Creator = account;
+      return car;
+    }).ToList();
 
     return cars;
   }
