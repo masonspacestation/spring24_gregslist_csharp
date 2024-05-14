@@ -1,5 +1,6 @@
 
 
+
 namespace csharp_gregslist_api.Repositories;
 
 public class CarsRepository
@@ -45,6 +46,15 @@ public class CarsRepository
     SELECT * FROM cars WHERE id = LAST_INSERT_ID();";
 
     Car car = _db.Query<Car>(sql, carData).FirstOrDefault();
+
+    return car;
+  }
+
+  internal Car GetCarById(int carId)
+  {
+    string sql = "SELECT * FROM cars WHERE id = @carId;";
+
+    Car car = _db.Query<Car>(sql, new { carId }).FirstOrDefault();
 
     return car;
   }

@@ -1,5 +1,6 @@
 
 
+
 namespace csharp_gregslist_api.Services;
 
 public class CarsService
@@ -14,6 +15,18 @@ public class CarsService
   internal Car CreateCar(Car carData)
   {
     Car car = _repository.CreateCar(carData);
+    return car;
+  }
+
+  internal Car GetCarById(int carId)
+  {
+    Car car = _repository.GetCarById(carId);
+
+    if (car == null)
+    {
+      throw new Exception($"Invalid id: {carId}");
+    }
+
     return car;
   }
 
