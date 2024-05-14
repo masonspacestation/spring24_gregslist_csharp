@@ -1,4 +1,5 @@
 
+
 namespace csharp_gregslist_api.Repositories;
 
 public class CarsRepository
@@ -46,5 +47,14 @@ public class CarsRepository
     Car car = _db.Query<Car>(sql, carData).FirstOrDefault();
 
     return car;
+  }
+
+  internal List<Car> GetCars()
+  {
+    string sql = "SELECT * FROM cars;";
+
+    List<Car> cars = _db.Query<Car>(sql).ToList();
+
+    return cars;
   }
 }

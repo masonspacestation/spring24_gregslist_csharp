@@ -1,4 +1,5 @@
 
+
 namespace csharp_gregslist_api.Services;
 
 public class CarsService
@@ -14,5 +15,11 @@ public class CarsService
   {
     Car car = _repository.CreateCar(carData);
     return car;
+  }
+
+  internal List<Car> GetCars()
+  {
+    List<Car> cars = _repository.GetCars();
+    return cars;
   }
 }

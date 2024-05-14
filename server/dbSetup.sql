@@ -72,3 +72,16 @@ SELECT
   *
 FROM
   cars;
+
+SELECT
+  *
+FROM
+  accounts
+WHERE
+  id = "65f87bc1e02f1ee243874743";
+
+SELECT
+  *
+FROM
+  cars
+  JOIN accounts ON cars.creatorId = accounts.id;
