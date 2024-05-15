@@ -88,6 +88,8 @@ CREATE TABLE houses (
     FOREIGN KEY (creatorId) REFERENCES accounts (id) ON DELETE CASCADE
 );
 
+DROP TABLE houses;
+
 INSERT INTO
     houses (
         sqft,
@@ -95,13 +97,25 @@ INSERT INTO
         bathrooms,
         imgUrl,
         description,
-        price
+        price,
+        creatorId
     )
 VALUES (
-        2800,
-        4,
-        4,
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aG91c2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-        "idk lol",
-        350000
+        1200,
+        3,
+        2,
+        "https://i.pinimg.com/736x/86/10/60/86106086e9594672ad7408913b5a3a24.jpg",
+        "This house is for sale.",
+        320000,
+        "6643d723c1cc31588e2996b2"
     );
+
+SELECT houses.*, accounts.*
+FROM houses
+    JOIN accounts ON accounts.id = houses.creatorId
+WHERE
+    houses.id = 1;
+
+SELECT houses.*, accounts.*
+FROM houses
+    JOIN accounts ON accounts.id = houses.creatorId

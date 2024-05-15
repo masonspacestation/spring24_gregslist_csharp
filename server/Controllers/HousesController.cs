@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace csharp_gregslist_api.Controllers;
 
 [ApiController]
@@ -73,6 +75,23 @@ public class HousesController : ControllerBase
       Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
       string message = _housesService.DestroyHouse(houseId, userInfo.Id);
       return Ok(message);
+    }
+    catch (Exception exception)
+    {
+      return BadRequest(exception.Message);
+    }
+  }
+
+
+  [Authorize]
+  [HttpPut("{houseId}")]
+  public async Task<ActionResult<House>> UpdateHouse(int houseId, [FromBody] House houseData)
+  {
+    try
+    {
+      Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+      House house = _housesService.UpdateHouse(houseId, userInfo.Id, houseData);
+      return Ok(house);
     }
     catch (Exception exception)
     {

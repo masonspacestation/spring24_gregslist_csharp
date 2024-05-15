@@ -2,6 +2,7 @@
 
 
 
+
 namespace csharp_gregslist_api.Repositories;
 
 public class HousesRepository
@@ -63,12 +64,46 @@ VALUES (
   internal House GetHouseById(int houseId)
   {
     string sql = @"
-        SELECT *
-        FROM houses
-        WHERE id = @houseId
-        ;";
+    SELECT houses.*, accounts.*
+FROM houses
+    JOIN accounts ON accounts.id = houses.creatorId
+WHERE
+    houses.id = @houseId;";
 
-    House house = _db.Query<House>(sql, new { houseId }).FirstOrDefault();
+    House house = _db.Query<House, Account, House>(sql, (house, account) =>
+    {
+      house.Creator = account;
+      return house;
+    }, new { houseId }).FirstOrDefault();
     return house;
   }
+
+  internal House UpdateHouse(House houseToUpdate)
+  {
+    string sql = @"
+    UPDATE houses
+    SET
+    price = @Price,
+    description = @Description,
+    imgUrl = @ImgUrl
+    WHERE id = @Id;
+
+SELECT
+houses.*,
+accounts.*
+
+FROM houses
+JOIN accounts ON accounts.id = houses.creatorId
+WHERE houses.id = @Id
+    ;";
+
+    House house = _db.Query<House, Account, House>(sql, (house, account) =>
+    {
+      house.Creator = account;
+      return house;
+    }, houseToUpdate).FirstOrDefault();
+
+    return house;
+  }
+
 }

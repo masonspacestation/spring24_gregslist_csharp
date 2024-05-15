@@ -45,4 +45,19 @@ public class HousesService
     }
     return house;
   }
+
+  internal House UpdateHouse(int houseId, string userId, House houseData)
+  {
+    House houseToUpdate = GetHouseById(houseId);
+    if (houseToUpdate.CreatorId != userId)
+    {
+      throw new Exception("You are not the creator of this house");
+    }
+    houseToUpdate.Price = houseData.Price ?? houseToUpdate.Price;
+    houseToUpdate.Description = houseData.Description ?? houseToUpdate.Description;
+    houseToUpdate.ImgUrl = houseData.ImgUrl ?? houseToUpdate.ImgUrl;
+
+    House updatedHouse = _repository.UpdateHouse(houseToUpdate);
+    return updatedHouse;
+  }
 }
